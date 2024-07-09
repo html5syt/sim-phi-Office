@@ -1,3 +1,5 @@
+正在进行office加载项适配工作......
+
 # <!-- prettier-ignore -->[Phixos](https://lchz&#104;3473.github.io/sim-phi/index)
 
 ## 简介
