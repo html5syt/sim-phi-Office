@@ -1098,7 +1098,7 @@ function mainLoop() {
   ctx.fillStyle = '#fff';
   ctx.globalAlpha = 0.8;
   ctx.textAlign = 'right';
-  ctx.fillText(`${meta[0]} v${meta[1].join('.')} - Code by lchz\x683\x3473`, (canvas.width + canvasfg.width) / 2 - lineScale * 0.1, canvas.height - lineScale * 0.1);
+  ctx.fillText(`${meta[0]} v${meta[1].join('.')} - Code by lchz\x683\x3473 Re.V`, (canvas.width + canvasfg.width) / 2 - lineScale * 0.1, canvas.height - lineScale * 0.1);
   ctx.globalCompositeOperation = 'source-over';
 }
 function loopNoCanvas() {

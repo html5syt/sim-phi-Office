@@ -6,7 +6,7 @@ export default hook.define({
   contents: [
     {
       type: 'script',
-      meta: [$ => fireTip($('#btn-play'))]
+      meta: [$ => fireTip($('#btn-skin'))]
     }
   ]
 });
@@ -208,7 +208,8 @@ function fireTip(elem) {
     let pressTime = null;
     longPress(elem, () => {
       if (pressTime == null) pressTime = performance.now();
-      if (performance.now() - pressTime > 1000) return 1;
+      if (performance.now() - pressTime > 0) return 1;
+      // 改长按为点击
       return 0;
     }, () => {
       skin();
