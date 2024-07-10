@@ -33,12 +33,12 @@ const viewExt = $id('view-ext') as HTMLDivElement;
 const coverDark = $id('cover-dark') as HTMLDivElement;
 const coverRmg = $id('cover-rmg') as HTMLDivElement;
 const coverView = $id('cover-view') as HTMLDivElement;
-const buttonRmg = $id('btn-rmg') as HTMLInputElement;
+// const buttonRmg = $id('btn-rmg') as HTMLInputElement;
 const buttonDocs = $id('btn-docs') as HTMLInputElement;
 const buttonMore = $id('btn-more') as HTMLInputElement;
 const anchorCfg = $id('nav-cfg') as HTMLAnchorElement;
 const anchorMsg = $id('nav-msg') as HTMLAnchorElement;
-const anchorRmg = $id('nav-rmg') as HTMLAnchorElement;
+// const anchorRmg = $id('nav-rmg') as HTMLAnchorElement;
 const strongOut = $id('msg-out');
 const blockUploader = $id('uploader') as HTMLDivElement;
 const stageEl = $id('stage') as HTMLDivElement;
@@ -151,11 +151,11 @@ coverDark.addEventListener('click', () => {
   coverRmg.classList.add('fade');
   coverView.classList.add('fade');
 });
-buttonRmg.addEventListener('click', () => {
-  coverDark.classList.remove('fade');
-  coverRmg.classList.remove('fade');
-  anchorRmg.click();
-});
+// buttonRmg.addEventListener('click', () => {
+//   coverDark.classList.remove('fade');
+//   coverRmg.classList.remove('fade');
+//   anchorRmg.click();
+// });
 buttonDocs.addEventListener('click', () => {
   main.fireModal('<p>提示</p>', '<p><a href="https://docs.lchz\x68.net/project/sim-phi-core" target="_blank">点击此处</a>查看使用说明</p>');
 });
