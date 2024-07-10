@@ -38,7 +38,7 @@
         </div>
         <input type="button" value="重置" onclick="location.reload(true)" />
         <input type="button" id="btn-rmg" value="资源管理" /> -->
-        <input type="button" id="btn-more" value="更多设置" />
+        <!--  -->
         <!-- <div id="select" class="disabled">
           <div>谱面：<select id="select-chart" style="width: 6em"></select></div>
           <div>音乐：<select id="select-bgm" style="width: 6em"></select></div>
@@ -155,6 +155,7 @@
           <div class="view-content">
             <div id="view-cfg">
 <!-- edited↓ -->
+<div><strong id="msg-out">初始化...</strong></div>
 <div id="uploader" class="disabled">
   <input type="button" id="uploader-upload" value="上传" />
   <div id="uploader-select">
@@ -165,6 +166,7 @@
   <input type="button" value="重置" onclick="location.reload(true)" />
 <!-- <input type="button" id="btn-rmg" value="资源管理" /> -->
 <input type="button" id="btn-docs" value="使用说明" />
+<input type="button" id="btn-skin" value="选择皮肤" />
 </div>
 
 <div>
@@ -180,7 +182,7 @@
 <div>图片：<select id="select-bg" style="width: 6em"></select></div>
 <br />
 <div>
-  宽高比：<select id="select-aspect-ratio" style="width: 4em">
+  可打歌区域宽高比：<select id="select-aspect-ratio" style="width: 4em">
     <option value="1.25">5:4</option>
     <option value="1.333333">4:3</option>
     <option value="1.4316546762589928">10:7</option>
@@ -257,7 +259,7 @@
 <br>
 <div class="disabled-when-playing">谱面延时(ms)：<input id="input-offset" type="number" step="5" class="input" style="width: 4em" placeholder="0" /></div>
 
-<div><strong id="msg-out">初始化...</strong></div>
+
 
 
 <!-- edited↑ -->
@@ -267,6 +269,7 @@
         </div>
       </div>
       <!-- <p class="footer">&copy;&nbsp;2020-2024&nbsp;lchz&#104;3473</p> -->
+      <input type="button" id="btn-more" value="更多设置" />
     </div>
   </body>
 </html>
