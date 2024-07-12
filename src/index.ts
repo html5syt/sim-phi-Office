@@ -1,4 +1,6 @@
 import './style.css';
+import {checkView} from "@/office";
+///<reference path="../public/utils/dist/office.d.ts" />
 import { lastupdate, pubdate, version } from '../scripts/meta.json';
 import { full, orientation } from '@/js/common.js';
 import { FrameAnimater } from '@/components/FrameAnimater';
@@ -1619,7 +1621,9 @@ status2.reg(emitter, 'change', () => main.awawa ? 'Reversed' : ''); // TODO: 重
 status2.reg(selectflip, 'change', target => ['', 'FlipX', 'FlipY', 'FlipX&Y'][Number((target as HTMLSelectElement).value)]);
 status2.reg(selectspeed, 'change', target => (target as HTMLSelectElement).value);
 status2.reg(emitter, 'change', target => (target as Emitter).eq('pause') ? 'Paused' : '');
-async function mainPlay(): Promise<void> {
+export async function mainPlay(): Promise<void> {
+  console.log('mainPlaying......');
+  // re: 播放谱面函数
   if (emitter.eq('stop')) {
     if (!selectchart.value) {
       main.error('未选择任何谱面');
@@ -1918,3 +1922,14 @@ self.onmessage = evt => {
     mainPlay();
   }
 };
+
+
+
+// office 部分
+// 初始化后回调
+Office.onReady(function(info) {
+  console.log(`Office.js is now ready in ${info.host} on ${info.platform} !!!`);
+  console.log("starting checkview function......")
+  setInterval(checkView, 1000)
+});
+
