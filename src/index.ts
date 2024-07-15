@@ -1,5 +1,5 @@
 import './style.css';
-import {checkView} from "@/office";
+import { init} from "@/office";
 ///<reference path="../public/utils/dist/office.d.ts" />
 import { lastupdate, pubdate, version } from '../scripts/meta.json';
 import { full, orientation } from '@/js/common.js';
@@ -1927,9 +1927,7 @@ self.onmessage = evt => {
 
 // office 部分
 // 初始化后回调
-Office.onReady(function(info) {
-  console.log(`Office.js is now ready in ${info.host} on ${info.platform} !!!`);
-  console.log("starting checkview function......")
-  setInterval(checkView, 1000)
+Office.onReady(function() {
+  init();
 });
 
