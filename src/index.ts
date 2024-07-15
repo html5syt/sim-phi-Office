@@ -1588,7 +1588,9 @@ selectchart.addEventListener('change', adjustInfo);
 emitter.addEventListener('change', function(this: Emitter) {
   canvas.classList.toggle('fade', this.eq('stop'));
   blockMask.classList.toggle('fade', this.ne('stop'));
-  btnPlay.value = this.eq('stop') ? '播放' : '停止';
+  btnPlay.value = this.eq('stop') ? '播放（已失效）' : '停止（已失效）';
+  // re:dev-warnning:未完成：播放/暂停按钮改
+  btnPause.value = this.eq('pause') ? '继续' : '暂停';
   btnPause.value = this.eq('pause') ? '继续' : '暂停';
   btnPause.classList.toggle('disabled', this.eq('stop'));
   for (const elem of $$('.disabled-when-playing')) elem.classList.toggle('disabled', this.ne('stop'));
@@ -1624,7 +1626,7 @@ status2.reg(emitter, 'change', target => (target as Emitter).eq('pause') ? 'Paus
 export async function mainPlay(): Promise<void> {
   console.log('mainPlaying......');
   // re: 播放谱面函数
-  if (emitter.eq('stop')) {
+  // if (emitter.eq('stop')) {
     if (!selectchart.value) {
       main.error('未选择任何谱面');
       return;
@@ -1650,7 +1652,10 @@ export async function mainPlay(): Promise<void> {
     timeIn.play();
     interact.activate();
     emitter.emit('play');
-  } else {
+  }
+  // } else {
+export async function mainStop(): Promise<void> {
+  // re: 停止播放谱面函数
     emitter.emit('stop');
     interact.deactive();
     audio.stop();
@@ -1669,7 +1674,7 @@ export async function mainPlay(): Promise<void> {
     duration0 = 0;
     for (const callback of main.end.values()) await callback();
   }
-}
+// }
 async function loadLineData({
   onwarn = (_: string) => {}
 } = {}) {
