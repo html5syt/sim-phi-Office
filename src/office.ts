@@ -1,8 +1,8 @@
-import {mainPlay,mainStop} from "@/index";
+import {mainPlay} from "@/index";
 ///<reference path="../public/utils/dist/office.d.ts" />
 
 
-var playFlag=0;
+
 
 // 入口函数
 export function init() {
@@ -18,7 +18,7 @@ Office.initialize = function(){
 
     //Gets whether the current view is edit or read.
     // const currentView = getActiveFileView();
-    setInterval(run, 1000);
+
     //register for the active view changed handler
 
     registerActiveViewChanged();
@@ -29,16 +29,16 @@ Office.initialize = function(){
 
 
 function activeViewHandler(eventArgs: any) {
-        if (eventArgs.activeView == "edit" && playFlag==1){
+        if (eventArgs.activeView == "edit"){
             // console.log('playflag11:'+playFlag)
-            mainStop();
-            playFlag=0;
+            mainPlay();
+
             // console.log('playflag12:'+playFlag)
         }
-        else if(eventArgs.activeView == "read" && playFlag==0){
+        else if(eventArgs.activeView == "read"){
             // console.log('playflag21:'+playFlag)
             mainPlay();
-            playFlag=1;
+
             // console.log('playflag22:'+playFlag)
         }
 }
@@ -55,16 +55,4 @@ function registerActiveViewChanged() {
                 console.log("[office] activeview changed handler registered",asyncResult.status);
             }
         });
-}
-
-// This function displays the currently selected text in the console.
-// It uses the Common APIs.
-function run() {
-    Office.context.document.getSelectedDataAsync(Office.CoercionType.SlideRange, (asyncResult) => {
-        if (asyncResult.status === Office.AsyncResultStatus.Failed) {
-            console.error(asyncResult.error.message);
-        } else {
-            console.log("The selected data is ",JSON.stringify(asyncResult.value),".");
-        }
-    });
 }

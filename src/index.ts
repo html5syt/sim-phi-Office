@@ -1,5 +1,5 @@
 import './style.css';
-import { init} from "@/office";
+import {init} from "@/office";
 ///<reference path="../public/utils/dist/office.d.ts" />
 import { lastupdate, pubdate, version } from '../scripts/meta.json';
 import { full, orientation } from '@/js/common.js';
@@ -1588,9 +1588,7 @@ selectchart.addEventListener('change', adjustInfo);
 emitter.addEventListener('change', function(this: Emitter) {
   canvas.classList.toggle('fade', this.eq('stop'));
   blockMask.classList.toggle('fade', this.ne('stop'));
-  btnPlay.value = this.eq('stop') ? '播放（已失效）' : '停止（已失效）';
-  // re:dev-warnning:未完成：播放/暂停按钮改
-  btnPause.value = this.eq('pause') ? '继续' : '暂停';
+  btnPlay.value = this.eq('stop') ? '播放' : '停止';
   btnPause.value = this.eq('pause') ? '继续' : '暂停';
   btnPause.classList.toggle('disabled', this.eq('stop'));
   for (const elem of $$('.disabled-when-playing')) elem.classList.toggle('disabled', this.ne('stop'));
@@ -1626,7 +1624,7 @@ status2.reg(emitter, 'change', target => (target as Emitter).eq('pause') ? 'Paus
 export async function mainPlay(): Promise<void> {
   console.log('mainPlaying......');
   // re: 播放谱面函数
-  // if (emitter.eq('stop')) {
+  if (emitter.eq('stop')) {
     if (!selectchart.value) {
       main.error('未选择任何谱面');
       return;
@@ -1652,10 +1650,7 @@ export async function mainPlay(): Promise<void> {
     timeIn.play();
     interact.activate();
     emitter.emit('play');
-  }
-  // } else {
-export async function mainStop(): Promise<void> {
-  // re: 停止播放谱面函数
+  } else {
     emitter.emit('stop');
     interact.deactive();
     audio.stop();
@@ -1674,7 +1669,7 @@ export async function mainStop(): Promise<void> {
     duration0 = 0;
     for (const callback of main.end.values()) await callback();
   }
-// }
+}
 async function loadLineData({
   onwarn = (_: string) => {}
 } = {}) {
@@ -1933,6 +1928,7 @@ self.onmessage = evt => {
 // office 部分
 // 初始化后回调
 Office.onReady(function() {
-  init();
+
+init()
 });
 
