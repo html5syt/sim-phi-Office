@@ -1233,10 +1233,10 @@ function loopCanvas() {
     else if (timeIn.second >= 2.5) ctxfg.globalAlpha = tween.easeOutSine(6 - timeIn.second * 2);
     ctxfg.textAlign = 'center';
     // 曲名、曲师、曲绘和谱师
-    fillTextNode(tmps.name, wlen, hlen * 0.75, lineScale * 1.1, canvasfg.width - lineScale * 1.5);
-    fillTextNode(tmps.artist, wlen, hlen * 0.75 + lineScale * 1.25, lineScale * 0.55, canvasfg.width - lineScale * 1.5);
-    fillTextNode(tmps.illustrator, wlen, hlen * 1.25 + lineScale * 0.55, lineScale * 0.55, canvasfg.width - lineScale * 1.5);
-    fillTextNode(tmps.charter, wlen, hlen * 1.25 + lineScale * 1.4, lineScale * 0.55, canvasfg.width - lineScale * 1.5);
+    // fillTextNode(tmps.name, wlen, hlen * 0.75, lineScale * 1.1, canvasfg.width - lineScale * 1.5);
+    // fillTextNode(tmps.artist, wlen, hlen * 0.75 + lineScale * 1.25, lineScale * 0.55, canvasfg.width - lineScale * 1.5);
+    // fillTextNode(tmps.illustrator, wlen, hlen * 1.25 + lineScale * 0.55, lineScale * 0.55, canvasfg.width - lineScale * 1.5);
+    // fillTextNode(tmps.charter, wlen, hlen * 1.25 + lineScale * 1.4, lineScale * 0.55, canvasfg.width - lineScale * 1.5);
     // 判定线(装饰用)
     ctxfg.globalAlpha = 1;
     ctxfg.setTransform(1, 0, 0, 1, wlen, hlen);
