@@ -1,29 +1,27 @@
 import {mainPlay} from "@/index";
 ///<reference path="../public/utils/dist/office.d.ts" />
 
-
 var playFlag=0
 var activeview=0
+var int: NodeJS.Timeout
+
 // 入口函数
 export function init() {
-    // console.log(`Office.js is now ready in ${info.host} on ${info.platform} !!!`);
     console.log("office.ts inited");
-    // setInterval(checkView, 1000)
 }
 
+Office.initialize = function(){
+    registerActiveViewChanged();
+    checkViewF();
+}
+
+// 检查当前视图
 function checkViewF() {
     Office.context.document.getActiveViewAsync(
         function (asyncResult) {
         if (asyncResult.status == Office.AsyncResultStatus.Failed) {
             console.log("[office] Action failed with error: " + asyncResult.error.message);
         }
-        // else if (asyncResult.value == "edit" && playFlag==1){
-        //     // console.log('playflag11:'+playFlag)
-        //     mainPlay();
-        //     playFlag=0;
-        //     activeview=0
-        //     // console.log('playflag12:'+playFlag)
-        // }
         // 应对直接开启幻灯片放映
         else if(asyncResult.value == "read" && playFlag==0){
             // console.log('playflag21:'+playFlag)
@@ -35,28 +33,7 @@ function checkViewF() {
     });
 }
 
-//general Office.initialize function. Fires on load of the add-in.
-Office.initialize = function(){
-
-    //Gets whether the current view is edit or read.
-    // const currentView = getActiveFileView();
-
-    //register for the active view changed handler
-
-    registerActiveViewChanged();
-
-        checkViewF();
-    
-    //render the content based off of the currentView
-    //....
-}
-
-// 通用暂停
-// function sleep(ms: number): Promise<void> {
-//     return new Promise(resolve => setTimeout(resolve, ms));
-//   }
-  
-
+// 检查当前选中的幻灯片
 function checkView() {
     Office.context.document.getSelectedDataAsync(Office.CoercionType.SlideRange, (asyncResult) => {
         if (asyncResult.status === Office.AsyncResultStatus.Failed) {
@@ -64,10 +41,6 @@ function checkView() {
         }
         // @ts-ignore
         else  if (asyncResult.value.slides[0].index == 2 && playFlag==0 && activeview==1){
-            // const jsonString = asyncResult.value ;
-              
-            // const slide = JSON.parse(jsonString);
-
            {
             mainPlay();
             playFlag=1
@@ -76,10 +49,8 @@ function checkView() {
         }
     });
 }
-  
 
-var int: NodeJS.Timeout
-
+// 设置定时器
 async function setInt(flag:number) {
     if (flag==1){
         int=setInterval(checkView, 500)
@@ -90,26 +61,22 @@ async function setInt(flag:number) {
     }
 }
 
+// 活动视图改变处理函数
 async function activeViewHandler(eventArgs: any) {
         if (eventArgs.activeView == "edit"){
-            // console.log('playflag11:'+playFlag)
             mainPlay();
             playFlag=0
             activeview=0
             setInt(0)
-            // console.log('playflag12:'+playFlag)
         }
         else if(eventArgs.activeView == "read"){
-            // console.log('playflag21:'+playFlag)
             setInt(1)
             activeview=1
-            // console.log('playflag22:'+playFlag)
         }
 }
 
+// 注册活动视图改变事件
 function registerActiveViewChanged() {
-
-
     Office.context.document.addHandlerAsync(Office.EventType.ActiveViewChanged, activeViewHandler,
         function (asyncResult) {
             if (asyncResult.status == Office.AsyncResultStatus.Failed) {

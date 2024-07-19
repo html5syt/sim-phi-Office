@@ -430,6 +430,7 @@ const exitFull = () => {
   stage.resize();
 };
 // TODO: better way to handle this
+//@ts-ignore
 const timeIn = new Timer();
 const timeOut = new Timer();
 const timeEnd = new Timer();
@@ -1228,6 +1229,7 @@ function loopCanvas() {
   for (const callback of main.after.values()) callback();
   ctxfg.fillStyle = '#fff';
   // 开头过渡动画
+  // re：已禁用信息显示
   if (timeIn.second < 3) {
     if (timeIn.second < 0.67) ctxfg.globalAlpha = tween.easeOutSine(timeIn.second * 1.5);
     else if (timeIn.second >= 2.5) ctxfg.globalAlpha = tween.easeOutSine(6 - timeIn.second * 2);
