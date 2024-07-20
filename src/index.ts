@@ -121,7 +121,7 @@ interface MainOptions {
   status: typeof status;
   tmps: typeof tmps;
 }
-const main = {} as MainOptions;
+export const main = {} as MainOptions;
 main.modify = a => a;
 main.pressTime = 0;
 main.before = new Map();

@@ -10,12 +10,47 @@ export function init() {
     console.log("office.ts inited");
 }
 
+// phi，启动！
 Office.initialize = function(){
     registerActiveViewChanged();
     checkViewF();
 }
 
-// 检查当前视图
+
+// 加载谱面。。。
+async function loading(){
+
+        const goToFirst = Office.Index.First;
+    
+        Office.context.document.goToByIdAsync(goToFirst, Office.GoToType.Index, function (asyncResult) {
+            if (asyncResult.status == Office.AsyncResultStatus.Failed) {
+                console.error(asyncResult.error.message);
+            }
+            else {
+                setTimeout(gotonext,6000)
+            }
+        });
+
+        async function gotonext(){
+        const goToNext = Office.Index.Next;
+    
+        Office.context.document.goToByIdAsync(goToNext, Office.GoToType.Index, function (asyncResult) {
+            if (asyncResult.status == Office.AsyncResultStatus.Failed) {
+                console.error(asyncResult.error.message);
+            }
+            else {
+                mainPlay();
+                // main.error('测试。。。');
+                playFlag=1
+            }
+        });
+        }
+    
+}
+
+
+
+// // 检查当前视图
 function checkViewF() {
     Office.context.document.getActiveViewAsync(
         function (asyncResult) {
@@ -24,11 +59,7 @@ function checkViewF() {
         }
         // 应对直接开启幻灯片放映
         else if(asyncResult.value == "read" && playFlag==0){
-            // console.log('playflag21:'+playFlag)
-            mainPlay();
-            playFlag=1;
-            activeview=1
-            // console.log('playflag22:'+playFlag)
+            loading()
         }
     });
 }
@@ -61,6 +92,8 @@ async function setInt(flag:number) {
     }
 }
 
+
+
 // 活动视图改变处理函数
 async function activeViewHandler(eventArgs: any) {
         if (eventArgs.activeView == "edit"){
@@ -70,6 +103,7 @@ async function activeViewHandler(eventArgs: any) {
             setInt(0)
         }
         else if(eventArgs.activeView == "read"){
+            // 加载谱面时间
             setInt(1)
             activeview=1
         }
