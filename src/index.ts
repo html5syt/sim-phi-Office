@@ -201,6 +201,7 @@ class Emitter extends EventTarget {
     return this.status !== status;
   }
 }
+// @ts-ignore
 const emitter = new Emitter('stop');
 const status2 = {
   text: '',
@@ -838,7 +839,7 @@ interact.setKeyboardEvent({
 self.addEventListener('blur', () => {
   hitManager.clear('keyboard');
 });
-// 兼容移动设备
+// re:不）兼容移动设备（触摸
 interact.setTouchEvent({
   touchstartCallback(evt: TouchEvent) {
     for (const touch of evt.changedTouches) {
