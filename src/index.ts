@@ -327,7 +327,11 @@ const uploader = new FileEmitter();
   const options = { async createAudioBuffer(_: ArrayBuffer) { return audio.decode(_) } };
   const zip = new ZipReader({ handler: async data => reader.read(data, options) });
   zip.addEventListener('loadstart', () => sendText('加载zip组件...'));
-  zip.addEventListener('read', evt => { handleFile('zip', zip.total, pick((evt as CustomEvent<ReaderData>).detail)) });
+  // 监听zip文件的read事件
+  zip.addEventListener('read', evt => { 
+    // 处理zip文件，传入zip文件的总数和pick函数处理后的detail
+    handleFile('zip', zip.total, pick((evt as CustomEvent<ReaderData>).detail)) 
+  });
   blockUpload.addEventListener('click', uploader.uploadFile.bind(uploader));
   blockUploadFile.addEventListener('click', uploader.uploadFile.bind(uploader));
   blockUploadDir.addEventListener('click', uploader.uploadDir.bind(uploader));
