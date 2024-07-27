@@ -1,0 +1,19 @@
+{
+    "0": {
+        "name": "-请选择谱面文件-",
+        "path": ""
+    },
+    "1": {
+        "name": "测试spa谱面",
+        "path": "/chartfile/测试spa谱面.zip"
+    },
+    "2": {
+        "name": "Stasis AT",
+        "path": "/chartfile/Stasis AT.zip"
+    },
+    "3": {
+        "name": "测试2",
+        "path": "/chartfile/测试2.zip"
+    }
+
+}
