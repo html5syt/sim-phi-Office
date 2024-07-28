@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-<script src="./utils/dist/office.js"></script>
+<script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js" type="text/javascript"></script>
 
 <head>
   <!--viewport-fit=cover:Fill the whole screen on iPhone X-->
@@ -21,7 +21,7 @@
   <script>
     eval('try{eval("\'use strict\';{async(a=1)=>1}")}catch(e){location.href="/412.html"}');
   </script>
-  <script src="/utils/main.js"></script>
+  <script src="/sim-phi/utils/main.js"></script>
   <script type="module" src="script-1.5.9.js"></script>
 </head>
 
@@ -65,12 +65,8 @@
             <div><strong id="msg-out">初始化...</strong></div>
             <div id="uploader" class="disabled">
               
-              <input type="button" id="uploader-upload" value="上传" />
-              <div id="uploader-select">
-                <label id="uploader-file">上传文件</label>
-                <label id="uploader-dir">上传文件夹</label>
-              </div>
-              <select id="selectChartFile" style="width: 6em"></select>
+
+              <select id="selectChartFile" style="width: 10em"></select>
               <input type="button" value="重置" onclick="location.reload(true)" />
               <!-- <input type="button" id="btn-rmg" value="资源管理" /> -->
               <input type="button" id="btn-docs" value="使用说明" />
@@ -85,9 +81,9 @@
             <div id="select" class="disabled">
               <!-- empty -->
             </div>
-            <div>谱面：<select id="select-chart" style="width: 6em"></select></div>
-            <div>音乐：<select id="select-bgm" style="width: 6em"></select></div>
-            <div>图片：<select id="select-bg" style="width: 6em"></select></div>
+            <div>谱面：<select id="select-chart" style="width: 10em"></select></div>
+            <div>音乐：<select id="select-bgm" style="width: 10em"></select></div>
+            <div>图片：<select id="select-bg" style="width: 10em"></select></div>
             <br />
             <div>
               可打歌区域宽高比：<select id="select-aspect-ratio" style="width: 4em">
@@ -120,13 +116,13 @@
               </select>
             </div>
             <br>
-            <div>曲名：<input id="input-name" class="input" style="width: 7em" placeholder="&#60; Untitled &#62;" /></div>
-            <div>曲师：<input id="input-artist" class="input" style="width: 7em" placeholder="&#60; nameless &#62;" />
+            <div>曲名：<input id="input-name" class="input" style="width: 10em" placeholder="&#60; Untitled &#62;" /></div>
+            <div>曲师：<input id="input-artist" class="input" style="width: 10em" placeholder="&#60; nameless &#62;" />
             </div>
             <br>
-            <div>曲绘：<input id="input-illustrator" class="input" style="width: 7em" placeholder="&#60; nameless &#62;" />
+            <div>曲绘：<input id="input-illustrator" class="input" style="width: 10em" placeholder="&#60; nameless &#62;" />
             </div>
-            <div>谱师：<input id="input-charter" class="input" style="width: 7em" placeholder="&#60; nameless &#62;" />
+            <div>谱师：<input id="input-charter" class="input" style="width: 10em" placeholder="&#60; nameless &#62;" />
             </div>
             <br>
             <div>难度：<select id="select-difficulty" style="width: 3em"></select></div>
