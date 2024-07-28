@@ -1,12 +1,12 @@
 import './style.css';
-import {init} from "@/office";
+import {getChartFilePath, init} from "@/office";
 ///<reference path="../public/utils/dist/office.d.ts" />
 import { lastupdate, pubdate, version } from '../scripts/meta.json';
 import { full, orientation } from '@/js/common.js';
 import { FrameAnimater } from '@/components/FrameAnimater';
 import { FrameTimer } from '@/components/FrameTimer';
 import { Timer } from '@/components/Timer';
-import { FileEmitter, ZipReader, reader } from '@/utils/reader';
+import { FileEmitter, ZipReader, file2, reader } from '@/utils/reader';
 import { Renderer } from '@/core';
 import { HitManager, JudgeEvent } from '@/components/HitManager';
 import { Stat } from '@/components/Stat';
@@ -69,10 +69,6 @@ const selectDifficulty = $id('select-difficulty') as HTMLSelectElement;
 const selectLevel = $id('select-level') as HTMLSelectElement;
 const levelInfoHandler = new LevelInfoHandler(selectDifficulty, selectLevel);
 const selectVolume = $id('select-volume') as HTMLSelectElement;
-const blockUploaderSelect = $id('uploader-select') as HTMLDivElement;
-const blockUpload = $id('uploader-upload') as HTMLInputElement;
-const blockUploadFile = $id('uploader-file') as HTMLLabelElement;
-const blockUploadDir = $id('uploader-dir') as HTMLLabelElement;
 const blockSelect = $id('select') as HTMLDivElement;
 const blockMask = $id('mask') as HTMLDivElement;
 const tween = {
@@ -306,7 +302,7 @@ function adjustInfo() {
   }
 }
 // Uploader
-const uploader = new FileEmitter();
+export const uploader = new FileEmitter();
 (function() {
   const dones: Record<string, number> = {};
   const totals: Record<string, number> = {};
@@ -323,7 +319,7 @@ const uploader = new FileEmitter();
     loadComplete();
   };
   main.handleFile = handleFile;
-  let fileTotal = 0;
+  // let fileTotal = 0;
   const options = { async createAudioBuffer(_: ArrayBuffer) { return audio.decode(_) } };
   const zip = new ZipReader({ handler: async data => reader.read(data, options) });
   zip.addEventListener('loadstart', () => sendText('加载zip组件...'));
@@ -332,28 +328,14 @@ const uploader = new FileEmitter();
     // 处理zip文件，传入zip文件的总数和pick函数处理后的detail
     handleFile('zip', zip.total, pick((evt as CustomEvent<ReaderData>).detail)) 
   });
-  blockUpload.addEventListener('click', uploader.uploadFile.bind(uploader));
-  blockUploadFile.addEventListener('click', uploader.uploadFile.bind(uploader));
-  blockUploadDir.addEventListener('click', uploader.uploadDir.bind(uploader));
   uploader.addEventListener('change', loadComplete);
-  uploader.addEventListener('progress', evt => { // 显示加载文件进度
-    if (!(evt as ProgressEvent).total) return;
-    const percent = Math.floor((evt as ProgressEvent).loaded / (evt as ProgressEvent).total * 100);
-    sendText(`加载文件：${percent}% (${bytefm((evt as ProgressEvent).loaded)}/${bytefm((evt as ProgressEvent).total)})`);
-  });
-  uploader.addEventListener('load', evt => {
-    // console.log(evt);
-    const { file: { name, webkitRelativePath: path }, buffer } = evt as ProgressEvent & { file: File; buffer: ArrayBuffer };
-    const isZip = buffer.byteLength > 4 && new DataView(buffer).getUint32(0, false) === 0x504b0304;
-    const data: ByteData = { pathname: path || name, buffer };
-    const handler = async() => {
-      fileTotal++;
-      const result = await reader.read(data, options);
-      await handleFile('file', fileTotal, pick(result));
-    };
-    // 检测buffer是否为zip
-    if (isZip) zip.read(data);
-    else handler();
+  uploader.addEventListener('load', async evt => {
+    console.log(evt);
+    var buffer=await file2.arrayBuffer()
+    const data: ByteData = { pathname: getChartFilePath(), buffer };
+
+  zip.read(data);
+    // else handler();
   });
   function pick(data: ReaderData) {
     console.log(data);
@@ -910,7 +892,7 @@ window.addEventListener('load', (): void => {
       messageCallback: sendText,
       warnCallback: sendWarning,
       errorCallback: sendError,
-      mobileCallback: () => blockUploaderSelect.style.display = 'none',
+      mobileCallback: () => console.warn(`检测到移动设备，可能无法正常使用`),
       orientNotSupportCallback: () => {
         lockOri.checked = false;
         lockOri.container.classList.add('disabled');
@@ -1535,19 +1517,19 @@ const updateLineImage = (image: ImageBitmap) => {
 //   return '#' + rgba.map(i => ('00' + Math.round(Number(i) * 255 || 0).toString(16)).slice(-2)).join('');
 // }
 // byte转人类可读
-function bytefm(byte = 0) {
-  let result = byte;
-  if (result < 1024) return `${result}B`;
-  if ((result /= 1024) < 1024) return `${result.toFixed(2)}KB`;
-  if ((result /= 1024) < 1024) return `${result.toFixed(2)}MB`;
-  if ((result /= 1024) < 1024) return `${result.toFixed(2)}GB`;
-  if ((result /= 1024) < 1024) return `${result.toFixed(2)}TB`;
-  if ((result /= 1024) < 1024) return `${result.toFixed(2)}PB`;
-  if ((result /= 1024) < 1024) return `${result.toFixed(2)}EB`;
-  if ((result /= 1024) < 1024) return `${result.toFixed(2)}ZB`;
-  if ((result /= 1024) < 1024) return `${result.toFixed(2)}YB`;
-  result /= 1024; return `${result}BB`;
-}
+// function bytefm(byte = 0) {
+//   let result = byte;
+//   if (result < 1024) return `${result}B`;
+//   if ((result /= 1024) < 1024) return `${result.toFixed(2)}KB`;
+//   if ((result /= 1024) < 1024) return `${result.toFixed(2)}MB`;
+//   if ((result /= 1024) < 1024) return `${result.toFixed(2)}GB`;
+//   if ((result /= 1024) < 1024) return `${result.toFixed(2)}TB`;
+//   if ((result /= 1024) < 1024) return `${result.toFixed(2)}PB`;
+//   if ((result /= 1024) < 1024) return `${result.toFixed(2)}EB`;
+//   if ((result /= 1024) < 1024) return `${result.toFixed(2)}ZB`;
+//   if ((result /= 1024) < 1024) return `${result.toFixed(2)}YB`;
+//   result /= 1024; return `${result}BB`;
+// }
 selectVolume.addEventListener('change', evt => {
   const volume = Number((evt.target as HTMLInputElement).value);
   app.musicVolume = Math.min(1, 1 / volume);

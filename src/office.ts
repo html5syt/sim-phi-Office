@@ -1,4 +1,4 @@
-import { mainPlay } from "@/index";
+import { mainPlay,uploader } from "@/index";
 ///<reference path="../public/utils/dist/office.d.ts" />
 
 
@@ -223,12 +223,16 @@ selectChartFile.addEventListener('change', () => {
   });
 }
 
+var chartFilePath = "";
 
 // 假设的setChart函数  
 function setChart(value: string) {  
     console.log('Selected chart:', value);  
+    chartFilePath=value
+    uploader.simulateFileSelection(value)
     // 在这里可以添加更多的逻辑，比如加载图表等  
 }
 
+export function getChartFilePath() { return chartFilePath; }
 
 setSelect();

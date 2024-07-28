@@ -5,27 +5,74 @@ import { structInfoData, structLineData } from './structInfo';
 import md5 from 'md5';
 // @ts-expect-error: vite-plugin-worker-loader
 import Zip from '@/zip.worker?worker';
+
+export var file2= undefined as unknown as File;
+
 export class FileEmitter extends EventTarget {
   private readonly input: HTMLInputElement;
+
+  // // 假设这个函数返回一个文件的URL  
+  // private async fetchFileFromPath(filePath: string): Promise<Blob> {
+  //   const response = await fetch(filePath);
+  //   if (!response.ok) {
+  //     throw new Error(`Failed to fetch file: ${filePath}`);
+  //   }
+  //   return response.blob();
+  // }
+
+  // 触发文件加载的事件  
+  private fireFileLoaded(files: File): boolean {
+    return this.dispatchEvent(Object.assign(new Event('load'), { files }));
+  }
+
+  // 构造函数和其他代码...  
   public constructor() {
     super();
-    this.input = Object.assign(document.createElement('input'), {
-      type: 'file',
-      accept: '',
-      multiple: true,
-      onchange: () => {
-        this.fireChange(this.input.files);
-        for (const file of this.input.files || []) {
-          // 加载文件
-          const reader = new FileReader();
-          reader.readAsArrayBuffer(file);
-          reader.onprogress = evt => this.fireProgress(evt.loaded, evt.total);
-          reader.onload = evt => evt.target && evt.target.result instanceof ArrayBuffer && this.fireLoad(file, evt.target.result);
-        }
-        this.input.value = ''; // allow same file
+    this.input = document.createElement('input');
+    this.input.type = 'file';
+    this.input.accept = '';
+    this.input.multiple = true;
+
+    // 原始 onchange 事件处理器  
+    this.input.onchange = () => {
+      this.fireChange(this.input.files);
+      for (const file of this.input.files || []) {
+        // 加载文件
+        const reader = new FileReader();
+        reader.readAsArrayBuffer(file);
+        reader.onprogress = evt => this.fireProgress(evt.loaded, evt.total);
+        reader.onload = evt => evt.target && evt.target.result instanceof ArrayBuffer && this.fireLoad(file, evt.target.result);
       }
-    });
+
+      // // 假设您有一个方法来从某个地方调用以模拟文件选择  
+      // this.simulateFileSelection = async (filePath: string) => {
+      //   try {
+      //     // 从URL加载文件  
+      //     const blob = await this.fetchFileFromPath(filePath);
+      //     // 将Blob转换为File对象（如果需要，可以添加文件名和其他属性）  
+      //     const file = new File([blob], 'downloaded_file.zip', { type: 'application/zip' });
+      //     // 创建一个文件列表（因为我们可能一次只处理一个文件）  
+      //     const files = [file];
+
+      //     // 触发自定义的 change 事件，或者您可以直接调用后续的处理函数  
+      //     this.fireFileLoaded(files);
+
+      //     // 如果您希望这些文件也出现在 input 元素的 files 列表中（通常不推荐，因为用户未实际选择它们）  
+      //     // 注意：这通常不是标准行为，并且可能因浏览器而异  
+      //     // Object.defineProperty(this.input, 'files', {  
+      //     //   value: FileList.from(files),  
+      //     //   writable: false,  
+      //     //   enumerable: true  
+      //     // }); // 注意：FileList.from 不是标准API，这里只是示意  
+
+      //     // 由于我们不能直接修改 input.files，我们通常不这样做，而是使用自定义事件或直接调用处理函数  
+      //   } catch (error) {
+      //     console.error('Error loading file:', error);
+      //   }
+      // };
+    }
   }
+
   public uploadFile(): void {
     this.input.webkitdirectory = false;
     this.input.click();
@@ -43,7 +90,38 @@ export class FileEmitter extends EventTarget {
   public fireLoad(file: Pick<File, 'name'>, buffer: ArrayBuffer): boolean {
     return this.dispatchEvent(Object.assign(new ProgressEvent('load'), { file, buffer }));
   }
+
+  public async simulateFileSelection(filePath: string): Promise<void> {  
+    try {  
+      // 从 URL 加载文件  
+      const blob = await this.fetchFileFromPath(filePath);  
+      // 将 Blob 转换为 File 对象  
+      const file = new File([blob], filePath, { type: 'application/zip' });  
+      // 触发自定义的 change 事件，或调用处理函数  
+      file2=file
+      this.fireFileLoaded(file);  
+    } catch (error) {  
+      console.error('Error loading file:', error);  
+    }  
+  }  
+  
+  // 私有方法，用于从 URL 加载 Blob  
+  private async fetchFileFromPath(filePath: string): Promise<Blob> {  
+    const response = await fetch(filePath);  
+    if (!response.ok) {  
+      throw new Error(`Failed to fetch file: ${filePath}`);  
+    }  
+    return response.blob();  
+  }  
+
+  // 注意：上面的 simulateFileSelection 方法签名与构造函数内的私有方法冲突，我已在构造函数内的方法前添加了 `this.` 前缀以区分它们  
+  // 但实际上，您可能希望将构造函数内的私有方法重命名为其他名称，以避免混淆  
 }
+
+// 注意：我修改了 simulateFileSelection 方法的签名，以使其与构造函数内的私有方法不同。  
+// 在实际应用中，您可能希望将私有方法重命名为不同的名称，以避免潜在的命名冲突。
+
+
 export class ZipReader extends EventTarget {
   public total: number;
   private worker: Worker | null;
@@ -60,7 +138,7 @@ export class ZipReader extends EventTarget {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       const worker = new Zip() as Worker; // 以后考虑indexedDB存储url
       worker.addEventListener('message', msg => {
-        const handler = async() => {
+        const handler = async () => {
           const { data } = msg as { data: { data: ByteData; total: number } };
           this.total = data.total;
           const result = await this.handler(data.data);
@@ -91,7 +169,7 @@ function defineReader(readerInit: ReaderInit): ByteReader {
   const { pattern, type = 'binary', mustMatch = false, weight = 0, read } = readerInit;
   const reader = { pattern, type, mustMatch, weight, read };
   if (type === 'text') {
-    reader.read = async(i: ByteData) => {
+    reader.read = async (i: ByteData) => {
       if (i.isText == null) {
         try {
           i.text = stringify(i.buffer);
@@ -104,7 +182,7 @@ function defineReader(readerInit: ReaderInit): ByteReader {
     };
   }
   if (type === 'json') {
-    reader.read = async(i: ByteData) => {
+    reader.read = async (i: ByteData) => {
       if (i.isText == null) {
         try {
           i.text = stringify(i.buffer);
@@ -130,7 +208,7 @@ const readerInits: ReaderInit[] = [
   {
     pattern: /\.(mp3|ogg|wav|mp4|webm|ogv|mpg|mpeg|avi|mov|flv|wmv|mkv)$/i,
     async read(i: ByteData, { createAudioBuffer }: Record<string, unknown> = {}): Promise<MediaReaderData> {
-      return readMediaData(i, async(arraybuffer: ArrayBuffer) => {
+      return readMediaData(i, async (arraybuffer: ArrayBuffer) => {
         if (typeof createAudioBuffer === 'function') return createAudioBuffer(arraybuffer) as AudioBuffer;
         return defaultDecode(arraybuffer);
       });
