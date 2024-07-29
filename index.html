@@ -60,14 +60,14 @@
           <div id="view-cfg">
             <!-- edited↓ -->
             <div>GitHub: lchz&#104;3473/sim-phi<br>IN OFFICE
-              ADD-INS<br><strong>WARNING：①请在放映前加载谱面！②技术受限，非Ipad设备插件内无法触摸打歌。</strong><br>幻灯片开始放映后会自动开始播放谱面，退出放映后自动停止。
+              ADD-INS<br><strong>WARNING：选择完谱面后记得保存PPT！别忘记看文档（使用说明按钮）！。</strong><br>幻灯片开始放映后会自动开始播放谱面，退出放映后自动停止。
             </div>
             <div><strong id="msg-out">初始化...</strong></div>
             <div id="uploader" class="disabled">
-              
+
 
               <select id="selectChartFile" style="width: 10em"></select>
-              <input type="button" value="重置" onclick="location.reload(true)" />
+              <!-- <input type="button" value="重置" onclick="location.reload(true)" /> -->
               <!-- <input type="button" id="btn-rmg" value="资源管理" /> -->
               <input type="button" id="btn-docs" value="使用说明" />
               <input type="button" id="btn-skin" value="选择皮肤" />
@@ -120,7 +120,8 @@
             <div>曲师：<input id="input-artist" class="input" style="width: 10em" placeholder="&#60; nameless &#62;" />
             </div>
             <br>
-            <div>曲绘：<input id="input-illustrator" class="input" style="width: 10em" placeholder="&#60; nameless &#62;" />
+            <div>曲绘：<input id="input-illustrator" class="input" style="width: 10em"
+                placeholder="&#60; nameless &#62;" />
             </div>
             <div>谱师：<input id="input-charter" class="input" style="width: 10em" placeholder="&#60; nameless &#62;" />
             </div>
@@ -168,13 +169,15 @@
             <br>
             <div class="disabled-when-playing">谱面延时(ms)：<input id="input-offset" type="number" step="5" class="input"
                 style="width: 4em" placeholder="0" /></div>
-
+            <input type="button" id="resetChart" value="恢复默认谱面文件选中项（立即生效）" />
 
 
 
             <!-- edited↑ -->
           </div>
-          <div id="view-msg"></div>
+          <div id="view-msg">
+            <input type="button" id="music-dispatch" value="" />
+          </div>
         </div>
       </div>
     </div>
