@@ -1,4 +1,10 @@
 正在进行office加载项适配工作......
+# 听好了：
+敬请期待，马上就好（
+
+**至此，一锤定音，**
+
+**尘埃，已然落定。**
 
 # <!-- prettier-ignore -->[Phixos](https://lchz&#104;3473.github.io/sim-phi/index)
 
@@ -8,7 +14,7 @@ $\text{Phi\color{red}x\color{green}os}=\color{red}\xcancel{\text{\color{black}Ph
 
 > 这不是 Phi&#103;ros，这是在线的模拟器！
 
-如题，用 JS/Canvas 还原 [Phi&#103;ros](https://www.taptap.com/app/165287) 游戏画面。
+如题，用 JS/Canvas 还原 [Phi&#103;ros](https://www.taptap.com/app/165287) 画面。
 
 本项目属于个人兴趣项目，仅用于学习和测试。
 
@@ -33,9 +39,9 @@ $\text{Phi\color{red}x\color{green}os}=\color{red}\xcancel{\text{\color{black}Ph
 
 本项目源码按 [GPL-3.0](LICENSE.txt) 协议开源；不鼓励、不支持一切商业用途。
 
-本项目不提供游戏本体安装包及逆向工具/教程，也不提供谱面下载。
+本项目不提供本体安装包及逆向工具/教程，~~也不提供谱面下载。~~
 
-模拟器代码部分为 [lchz&#104;3473](https://space.bilibili.com/274753872) (以下简称 lchz&#104;) 独立编写，与游戏本体无关；
+模拟器代码部分为 [lchz&#104;3473](https://space.bilibili.com/274753872) (以下简称 lchz&#104;) 独立编写，与本体无关；
 
 您因使用或修改代码所造成的一切后果由您自己承担；
 
