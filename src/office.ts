@@ -1,11 +1,15 @@
-import { mainPlay,uploader } from "@/index";
+import { mainPlay, uploader } from "@/index";
 ///<reference path="../public/utils/dist/office.d.ts" />
 
-
-
+// 获取select元素  
+export const selectChartFile = document.getElementById('selectChartFile') as HTMLSelectElement;
+const musicDispatchE = document.getElementById('music-dispatch');
+const resetChart = document.getElementById('resetChart');
 var playFlag = 0
 var activeview = 0
+var isAuto = 0
 var int: NodeJS.Timeout
+var chartFilePath = "";
 
 // 入口函数
 export function init() {
@@ -16,6 +20,13 @@ export function init() {
 Office.initialize = function () {
     registerActiveViewChanged();
     checkViewF();
+    musicDispatch();
+    setSelect();
+    selectChartFile.addEventListener('listfiled', () => {
+        getAndSetChartIndex();
+    })
+    // uploader.simulateFileSelection(chartFilePath)
+    // // 测试测试！！！记得删除
 }
 
 
@@ -124,27 +135,36 @@ function registerActiveViewChanged() {
         });
 }
 
-export function setSetting(name:string,value:any) {
+export function setSetting(name: string, value: any) {
     Office.context.document.settings.set(name, value);
-    Office.context.document.settings.saveAsync( (asyncResult) => {
+    Office.context.document.settings.saveAsync((asyncResult) => {
         if (asyncResult.status === Office.AsyncResultStatus.Failed) {
             console.error(asyncResult.error.message);
         }
         // @ts-ignore
-        else{
+        else {
             console.log("[office] set setting success")
         }
     });
 }
 
-export function rmSetting(all: boolean = false, name: string) { 
+export function rmSetting(all: boolean = false, name: string) {
     if (all) {
         // re: 统计所有用到的设置名！
-        Office.context.document.settings.remove('mySetting');
+        Office.context.document.settings.remove('chartIndex');
     }
     else {
         Office.context.document.settings.remove(name);
     }
+    Office.context.document.settings.saveAsync((asyncResult) => {
+        if (asyncResult.status === Office.AsyncResultStatus.Failed) {
+            console.error(asyncResult.error.message);
+        }
+        // @ts-ignore
+        else {
+            console.log("[office] rm setting success")
+        }
+    });
 }
 
 // Office.context.document.settings.get('mySetting')
@@ -156,83 +176,107 @@ export function rmSetting(all: boolean = false, name: string) {
 // 设置谱面文件列表
 function setSelect() {
 
-// 假设list.json位于您的服务器上，或者您可以通过相对路径或绝对URL访问它  
-const jsonUrl = '/chartfile/list.json';  
-  
-// 使用fetch异步加载JSON文件  
-fetch(jsonUrl)  
-  .then(response => {  
-    if (!response.ok) {  
-        throw new Error('谱面JSON路径文件读取错误，请检查文件是否存在！');  
-    }  
-    return response.json(); // 解析JSON响应  
-  })  
-  .then(data => {  
-    // 假设data现在包含了从list.json加载的对象  
-    const chartlist = data as { [key: string]: { name: string, path: string } };  
-  
-    // 创建两个列表  
-    const chartFileName: string[] = [];  
-    const chartFilePath: string[] = [];  
-  
-    // 遍历chartlist对象  
-    for (const key in chartlist) {  
-        if (chartlist.hasOwnProperty(key)) { // 确保属性是对象自身的属性，而不是继承的  
-            const item = chartlist[key];  
-            chartFileName.push(item.name);  
-            chartFilePath.push(item.path);  
-        }  
-    }  
-  
-// 假设这是从某处获取的列表  
+    // 假设list.json位于您的服务器上，或者您可以通过相对路径或绝对URL访问它  
+    const jsonUrl = '/chartfile/list.json';
 
-  
-// 确保这两个列表的长度相同  
-if (chartFileName.length !== chartFilePath.length) {  
-    throw new Error("chartFileName和chartFilePath的项数必须相同，请检查JSON配置！");  
-}  
-  
-// 获取select元素  
-const selectChartFile = document.getElementById('selectChartFile') as HTMLSelectElement;  
-  
-// 清除select元素中现有的所有option（如果有的话）  
-selectChartFile.innerHTML = '';  
-  
-// 遍历列表并添加option元素  
-chartFileName.forEach((name, index) => {  
-    const option = document.createElement('option');  
-    option.value = chartFilePath[index]; // 设置value为对应的文件路径  
-    option.text = name; // 设置显示的文本为文件名  
-    selectChartFile.appendChild(option); // 将option添加到select中  
-});  
-  
-// 添加事件监听器以处理选项改变  
-selectChartFile.addEventListener('change', () => {  
-    // 获取所选option的value（即文件路径）  
-    const selectedValue = selectChartFile.value;  
-    // 调用setChart函数并传入所选的value  
-    setChart(selectedValue);  
-});  
-  
+    // 使用fetch异步加载JSON文件  
+    fetch(jsonUrl)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('谱面JSON路径文件读取错误，请检查文件是否存在！');
+            }
+            return response.json(); // 解析JSON响应  
+        })
+        .then(data => {
+            // 假设data现在包含了从list.json加载的对象  
+            const chartlist = data as { [key: string]: { name: string, path: string } };
+
+            // 创建两个列表  
+            const chartFileName: string[] = [];
+            const chartFilePath: string[] = [];
+
+            // 遍历chartlist对象  
+            for (const key in chartlist) {
+                if (chartlist.hasOwnProperty(key)) { // 确保属性是对象自身的属性，而不是继承的  
+                    const item = chartlist[key];
+                    chartFileName.push(item.name);
+                    chartFilePath.push(item.path);
+                }
+            }
+
+            // 假设这是从某处获取的列表  
+
+
+            // 确保这两个列表的长度相同  
+            if (chartFileName.length !== chartFilePath.length) {
+                throw new Error("chartFileName和chartFilePath的项数必须相同，请检查JSON配置！");
+            }
 
 
 
-  })  
-  .catch(error => {  
-    console.error('Error fetching or parsing JSON:', error);  
-  });
+            // 清除select元素中现有的所有option（如果有的话）  
+            selectChartFile.innerHTML = '';
+
+            // 遍历列表并添加option元素  
+            chartFileName.forEach((name, index) => {
+                const option = document.createElement('option');
+                option.value = chartFilePath[index]; // 设置value为对应的文件路径  
+                option.text = name; // 设置显示的文本为文件名  
+                selectChartFile.appendChild(option); // 将option添加到select中  
+            });
+
+            // 添加事件监听器以处理选项改变  
+            selectChartFile.addEventListener('change', () => {
+                // 获取所选option的value（即文件路径）  
+                const selectedValue = selectChartFile.value;
+                // 调用setChart函数并传入所选的value  
+                setChart(selectedValue);
+            });
+            selectChartFile.dispatchEvent(new Event('listfiled'));
+
+
+
+        })
+        .catch(error => {
+            console.error('Error fetching or parsing JSON:', error);
+        });
 }
 
-var chartFilePath = "";
 
-// 假设的setChart函数  
-function setChart(value: string) {  
-    console.log('Selected chart:', value);  
-    chartFilePath=value
+
+// 代替原有文件选择框
+function setChart(value: string) {
+    console.log('Selected chart:', value);
+    if (isAuto == 1){
+        isAuto=0
+    }
+    else{
+        const chartIndex=selectChartFile.selectedIndex
+        setSetting('chartIndex', chartIndex)
+    }
+    chartFilePath = value
     uploader.simulateFileSelection(value)
     // 在这里可以添加更多的逻辑，比如加载图表等  
 }
 
 export function getChartFilePath() { return chartFilePath; }
 
-setSelect();
+function musicDispatch() {
+    //@ts-ignore
+    musicDispatchE.click();
+}
+//@ts-ignore
+resetChart.addEventListener('click', function(this: HTMLInputElement) {
+    rmSetting(true,"0")
+})
+
+function getAndSetChartIndex() {
+    isAuto=1
+    const chartIndex = Office.context.document.settings.get('chartIndex');
+    selectChartFile.selectedIndex = chartIndex;
+    selectChartFile.dispatchEvent(new Event('change'));
+}
+//@ts-ignore
+// musicDispatchE.addEventListener('click', function(this: HTMLInputElement) {
+//     rmSetting(true,"0")
+// })

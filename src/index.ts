@@ -485,6 +485,7 @@ let isOutStart = false; // 结尾过渡动画
 let isOutEnd = false; // 临时变量
 // 必要组件
 const musicController = new AudioController();
+//@ts-ignore
 const soundController = new AudioController();
 const frameTimer = new FrameTimer();
 const frameAnimater = new FrameAnimater();
@@ -942,6 +943,8 @@ window.addEventListener('load', (): void => {
     blockUploader.classList.remove('disabled');
     blockSelect.classList.remove('disabled');
     emitter.dispatchEvent(new CustomEvent('change'));
+    // selectChartFile.dispatchEvent(new CustomEvent('change'));
+    // // 测试测试！！！
   };
   handler();
 }, { once: true });
