@@ -4,12 +4,13 @@ import { mainPlay, uploader } from "@/index";
 // 获取select元素  
 export const selectChartFile = document.getElementById('selectChartFile') as HTMLSelectElement;
 const musicDispatchE = document.getElementById('music-dispatch');
-const resetChart = document.getElementById('resetChart');
+// const resetChart = document.getElementById('resetChart');
 var playFlag = 0
-var activeview = 0
+export var activeview = 0
 var isAuto = 0
 var int: NodeJS.Timeout
 var chartFilePath = "";
+export var isOfficeInited = 0
 
 // 入口函数
 export function init() {
@@ -18,6 +19,7 @@ export function init() {
 
 // phi，启动！
 Office.initialize = function () {
+    isOfficeInited = 1
     registerActiveViewChanged();
     checkViewF();
     musicDispatch();
@@ -29,6 +31,11 @@ Office.initialize = function () {
     // // 测试测试！！！记得删除
 }
 
+onload = () => {
+    if (isOfficeInited == 0) {
+        setSelect();
+    }
+};
 
 // 加载谱面。。。
 async function loading() {
@@ -116,6 +123,7 @@ async function activeViewHandler(eventArgs: any) {
         setInt(0)
     }
     else if (eventArgs.activeView == "read") {
+        musicDispatch();
         // 加载谱面时间
         setInt(1)
         activeview = 1
@@ -247,12 +255,14 @@ function setSelect() {
 // 代替原有文件选择框
 function setChart(value: string) {
     console.log('Selected chart:', value);
-    if (isAuto == 1){
-        isAuto=0
+    if (isAuto == 1) {
+        isAuto = 0
     }
-    else{
-        const chartIndex=selectChartFile.selectedIndex
-        setSetting('chartIndex', chartIndex)
+    else {
+        const chartIndex = selectChartFile.selectedIndex
+        if (isOfficeInited == 1 && activeview == 0) {
+            setSetting('chartIndex', chartIndex)
+        }
     }
     chartFilePath = value
     uploader.simulateFileSelection(value)
@@ -266,12 +276,12 @@ function musicDispatch() {
     musicDispatchE.click();
 }
 //@ts-ignore
-resetChart.addEventListener('click', function(this: HTMLInputElement) {
-    rmSetting(true,"0")
-})
+// resetChart.addEventListener('click', function(this: HTMLInputElement) {
+//     rmSetting(true,"0")
+// })
 
 function getAndSetChartIndex() {
-    isAuto=1
+    isAuto = 1
     const chartIndex = Office.context.document.settings.get('chartIndex');
     selectChartFile.selectedIndex = chartIndex;
     selectChartFile.dispatchEvent(new Event('change'));

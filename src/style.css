@@ -306,9 +306,9 @@ body {
 #stage {
   font-family: Custom, Consolas, Menlo, monospace;
   font-size: 4vmin;
-  color: black;
+  color: white;
   position: relative;
-  background-color: black;
+  background-color: white;
   margin: auto;
   /* margin: 0 ; */
   line-height: 0;

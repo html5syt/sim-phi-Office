@@ -939,7 +939,7 @@ window.addEventListener('load', (): void => {
       sendError('检测到图片加载异常，请关闭所有应用程序然后重试');
       return;
     }
-    sendText('等待上传文件...');
+    sendText('等待选择文件...');
     blockUploader.classList.remove('disabled');
     blockSelect.classList.remove('disabled');
     emitter.dispatchEvent(new CustomEvent('change'));
