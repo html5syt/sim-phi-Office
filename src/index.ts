@@ -155,7 +155,7 @@ coverDark.addEventListener('click', () => {
 //   anchorRmg.click();
 // });
 buttonDocs.addEventListener('click', () => {
-  main.fireModal('<p>提示</p>', '<p><a href="https://docs.lchz\x68.net/project/sim-phi-core" target="_blank">点击此处</a>查看使用说明</p>');
+  main.fireModal('<p>提示</p>', '<p><a href="https://docs.lchz\x68.net/project/sim-phi-core" target="_blank">点击此处</a>查看sim-phi的使用说明<br><a href="https://github.com/html5syt/sim-phi-Office" target="_blank">点击此处</a>查看Office插件的使用说明<br>无法访问请挂梯子，插件目录下也有离线版本的使用说明。</p>');
 });
 buttonMore.addEventListener('click', () => {
   coverDark.classList.remove('fade');
