@@ -55,7 +55,7 @@ $\text{Phi\color{red}x\color{green}os}=\color{red}\xcancel{\text{\color{black}Ph
     。。。
 }
 ```
-(请在复制以上内容到文件时删除以`//`开头的注释行！)
+(请在复制以上内容到文件时删除以`//`开头的标红注释行！)
 
 ## 3. 使用
 0. 运行“phi，启动！.bat”以启动服务端。
